@@ -3,7 +3,7 @@ ap_tmr    = 0             -- tmr0
 blink_tmr = 1             -- tmr1
 ap_check_cadence = 120000
 blink_cadence = 20000
-blink_length = 500
+blink_length = 300
 
 gpio0  = 3
 gpio2  = 4
@@ -88,7 +88,7 @@ function blink()
                 if r > 0.3 then
                     local pin = led[1]
                     t = led[2]
-                    time_on = math.random() * blink_length * 2
+                    time_on = math.random() * blink_length * 2 + 1
                     led_on(pin)
                     print("BLINK ON: "..pin.."    Time:"..time_on)
                     t:alarm(time_on, tmr.ALARM_SINGLE, function(t) turn_off_associated_led(t); end)
