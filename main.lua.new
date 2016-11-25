@@ -1,0 +1,31 @@
+state = "home"
+ap_tmr    = 0             -- tmr0
+--blink_tmr = 1             -- tmr1
+ap_check_cadence       =   120000
+default_led_cadence    =    20000
+default_led_duration   =      300
+default_motor_cadence  = 10800000 -- once per three hours
+default_motor_duration =    10000 -- 10 seconds
+
+gpio16 = 0
+gpio5  = 1
+gpio4  = 2
+gpio0  = 3
+gpio2  = 4
+gpio14 = 5
+gpio12 = 6
+gpio13 = 7
+gpio15 = 8
+
+
+
+print("Starting timer with...")
+print(gpio0)
+--t:register(time_on, tmr.ALARM_SINGLE, function(pin, t) print("expired"); t:unregister(); led_off(pin); end)
+
+myTimer = tmr.create()
+pin = 3
+tmr.alarm(myTimer, 5000, tmr.ALARM_SINGLE, function(myTimer, pin) print(pin) end)
+
+print("Done.")
+
