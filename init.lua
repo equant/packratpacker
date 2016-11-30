@@ -1,6 +1,12 @@
 collectgarbage()
 abort = false
 
+-- Make pins inputs
+for pin = 1, 8 do
+    gpio.mode(pin,gpio.INPUT)
+end
+
+
 function startup()
     uart.on("data")
 	if abort == true then
@@ -21,4 +27,4 @@ uart.on("data", "c",
 		end
 	end, 0)
 
-tmr.alarm(0,4000,0,startup)
+tmr.alarm(0,2000,0,startup)
