@@ -1,0 +1,15 @@
+#! /bin/sh
+
+state=.SYNC-STATE
+
+if [ $# -gt 0 -a "$1" = "-f" ]; then
+    shift
+    [ -r "sync" ] && rm -f "$state"
+fi
+
+[ -r $state ] || touch -t 197102030405 $state
+for f in *.lua; do
+    [ $f -nt $state ] || continue
+    /usr/bin/python2.7 ~/bin/luatool/luatool/luatool.py --port /dev/ttyUSB0 -b 115200 --src $f || { echo "Failed running luatool.py" >&2; exit 3; }
+done
+touch $state
