@@ -1,15 +1,21 @@
 function led_off(pin)
-    print("About to turn off: "..pin)
+    print("OFF: "..pin)
     gpio.write(pin, gpio.LOW) -- LED OFF
 end
 
 function led_on(pin)
-    print("About to turn on pin: "..pin)
+    print("ON:  "..pin)
     gpio.write(pin, gpio.HIGH) -- LED OFF
 end
 
-function make_search(continuation_function)
+function configure_pin(pin)
+    print("configuring pin("..pin..")")
+    gpio.mode(pin, gpio.OUTPUT)
+    --gpio.write(pin, gpio.HIGH) -- LED OFF
+    led_off(pin)
+end
 
+function check_accesspoint()
     function search_ap(t)
         print("Checking APs...")
         state = "unknown"
@@ -20,52 +26,48 @@ function make_search(continuation_function)
                 state = "home"
             end
         end
-        print("About to call continuation_function")
-        continuation_function()
     end
 
-    return search_ap
+    wifi.sta.getap(search_ap)
 end
 
-function get_state(continuation_function)
-    wifi.sta.getap(make_search(continuation_function))
-end
-
-function go_blinkers()
-    print("go_blinkers()")
-    for i, pin in pairs(devices) do
-        print("i: "..i)
-        led_on(pin)
+function blink(t, seq, ix, rep)
+    pins = seq[1]
+    print("Blink: pins[1](" .. pins[1] .. "), ix(" .. ix .. "), #pins(" .. #pins .. ", rep(" .. rep .. ")")
+    if ix > 0 then
+        led_off(pins[ix])
     end
 
-    mytimer = tmr.create()
-    mytimer:register(10000, tmr.ALARM_SINGLE, stop_everything)
-    mytimer:start()
-end
+    ix = ix + 1
 
-function initialize_devices()
-    for i, pin in pairs(devices) do
-        gpio.mode(pin,gpio.OUTPUT)
-        led_off(pin)
-    end
-end
-
-function stop_everything()
-    for i, pin in pairs(devices) do
-        led_off(pin)
-        --gpio.mode(pin,gpio.INPUT)   -- make pin input so it is off during sleep.
+    if ix > #pins then
+        -- Done with this repeat, start back at first pin again
+        ix = 1
+        rep = rep + 1
     end
 
-    print("Setting up sleep timer")
-    mytimer = tmr.create()
-    mytimer:register(5000, tmr.ALARM_SINGLE, go_to_sleep)
-    mytimer:start()
-    print("Done setting up sleep timer")
+    if rep == seq[3] then
+        -- Done blinking, quit until blink timer kicks us off again
+        print("END OF CADENCE (" .. pins[1] .. ")")
+        return
+    end
+
+    local pin = pins[ix]
+    time_on = seq[2]
+    led_on(pin)
+    function next_blink()
+        blink(t, seq, ix, rep)
+    end
+    t:register(time_on, tmr.ALARM_SINGLE, next_blink)
+    t:start()
 end
 
-function go_to_sleep()
-    --deep_sleep_duration = 900000000 -- (us) == 15 minutes
-    deep_sleep_duration =  10000000 -- (us) == 10 seconds
-    print("Going to sleep for "..deep_sleep_duration.."us")
-    node.dsleep(deep_sleep_duration)
+function do_blink(seq)
+    function c()
+        if state == "home" then
+            print("Starting up seq starting with pin #"..seq[1][1])
+            blink(tmr.create(), seq, 0, 0)
+        end
+    end
+    return c
 end
