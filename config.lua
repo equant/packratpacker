@@ -11,3 +11,4 @@ gpio13 = 7
 gpio15 = 8
 
 devices = {gpio0, gpio2, gpio14, gpio12, gpio13, gpio15}
+--devices = {gpio5, gpio4, gpio14, gpio12, gpio13}
