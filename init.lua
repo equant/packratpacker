@@ -1,6 +1,19 @@
 collectgarbage()
 abort = false
 
+print("All Pints Outputs off")
+for pin = 1, 8 do
+    gpio.mode(pin, gpio.OUTPUT)
+    gpio.write(pin, gpio.LOW) -- LED OFF
+end
+
+-- turn off led
+gpio.write(0, gpio.HIGH)
+for pin = 9, 12 do
+    gpio.write(pin, gpio.HIGH)
+end
+
+
 function startup()
     uart.on("data")
 	if abort == true then

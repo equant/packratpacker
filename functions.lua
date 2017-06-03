@@ -5,7 +5,7 @@ end
 
 function led_on(pin)
     print("ON:  "..pin)
-    gpio.write(pin, gpio.HIGH) -- LED OFF
+    gpio.write(pin, gpio.HIGH) -- LED ON
 end
 
 function configure_pin(pin)

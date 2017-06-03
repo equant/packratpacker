@@ -14,9 +14,11 @@ gpio15 = 8
 led_sequences = {
     -- PINS, Blink_length(us), Repetitions, Cadence (s)
     -- rgb_hood
-    {{gpio5, gpio4, gpio0}, 100, 10, 900},
+    {{gpio5, gpio4, gpio0}, 35, 6, 15},
     -- blinking_taillight
-    {{gpio2, gpio14}, 1000, 2, 901},
-    -- vibrator
-    {{gpio12}, 1100, 1, 3600}
+    {{gpio2, gpio14}, 1000, 2, 302},
+    -- vibrator -- 90 minutes
+    {{gpio12}, 1100, 1, 33},
+    -- rgb_hood reversed
+    {{gpio0, gpio4, gpio5}, 35, 6, 15},
 }

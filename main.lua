@@ -2,7 +2,7 @@ dofile("config.lua")
 dofile("functions.lua")
 
 print("Configuring GPIO...")
-for pin = 0, 8 do
+for pin = 1, 8 do
     configure_pin(pin)
 end
 
