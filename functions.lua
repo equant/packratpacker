@@ -21,10 +21,14 @@ function check_accesspoint()
         state = "unknown"
         for k, v in pairs(t) do
             print(k)
-            if (k == "GSO" or k == "ella" or "UAGuest") then
+            if (k == "GSO" or k == "ella" or k == "UAGuest") then
                 print("We are home.")
                 state = "home"
+                led_off(gpio_wifi_led) -- off because it's low on?
             end
+        end
+        if (state == "unknown") then
+            led_on(gpio_wifi_led) -- on because it's high off?
         end
     end
 
