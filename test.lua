@@ -30,5 +30,5 @@ function do_test_sequence()
     end
 end
 
-gpio.mode(5, gpio.INT, gpio.PULLUP)
-gpio.trig(5, "down", do_test_sequence)
+gpio.mode(7, gpio.INT, gpio.PULLUP)
+gpio.trig(7, "down", do_test_sequence)

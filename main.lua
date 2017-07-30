@@ -13,9 +13,9 @@ wifi.sleeptype(wifi.MODEM_SLEEP)
 check_accesspoint()
 
 print("Starting timers.")
-mytimer = tmr.create()
-mytimer:register(ap_check_cadence * 1000, tmr.ALARM_AUTO, check_accesspoint)
-mytimer:start()
+--mytimer = tmr.create()
+--mytimer:register(ap_check_cadence * 1000, tmr.ALARM_AUTO, check_accesspoint)
+--mytimer:start()
 for i, seq in pairs(led_sequences) do
     print("Creating cadence timer for seq #"..i.." (pin #"..seq[1][1]..")")
     t = tmr.create()

@@ -15,13 +15,25 @@ function configure_pin(pin)
     led_off(pin)
 end
 
+function wifi_suspended()
+    print("Wifi Suspended")
+end
+
+function suspend_wifi()
+    cfg={}
+    cfg.duration   = ap_check_cadence*1000*1000
+    cfg.suspend_cb = wifi_suspended
+    cfg.resume_cb  = checkaccesspoint
+    wifi.suspend(cfg)
+end
+
 function check_accesspoint()
     function search_ap(t)
         print("Checking APs...")
         state = "unknown"
         for k, v in pairs(t) do
             print(k)
-            if (k == "GSO" or k == "ella" or k == "UAGuest") then
+            if (k == "GSO" or k == "ella") then
                 print("We are home.")
                 state = "home"
                 led_off(gpio_wifi_led) -- off because it's low on?
@@ -30,6 +42,13 @@ function check_accesspoint()
         if (state == "unknown") then
             led_on(gpio_wifi_led) -- on because it's high off?
         end
+        cfg={}
+        cfg.duration   = ap_check_cadence*1000*1000
+        print("Dur:")
+        print(cfg.duration)
+        cfg.suspend_cb = suspend_wifi
+        cfg.resume_cb  = check_accesspoint
+        wifi.suspend(cfg)
     end
 
     wifi.sta.getap(search_ap)
