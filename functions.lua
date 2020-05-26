@@ -44,8 +44,6 @@ function check_accesspoint()
         end
         cfg={}
         cfg.duration   = ap_check_cadence*1000*1000
-        print("Dur:")
-        print(cfg.duration)
         cfg.suspend_cb = suspend_wifi
         cfg.resume_cb  = check_accesspoint
         wifi.suspend(cfg)

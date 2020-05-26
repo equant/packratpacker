@@ -14,7 +14,11 @@ gpio_wifi_led = 4
 led_sequences = {
     -- {PIN,}, Blink_length(us), Repetitions, Cadence (s)
     -- Big LEDs -- Every hour
-    {{3,1}, 35, 6, 3600},
+    {{3,1}, 35, 6, 36},     --- values for testing
+    --{{3,1}, 35, 6, 3600}, --- values for real world
+    -- LED Strip -- 
+    {{5}, 3500, 1, 26},     --- values for testing
     -- vibrator -- Every 1.9 hours
-    {{6}, 1100, 1, 6870}
+    {{6}, 1100, 1, 68}      --- values for testing
+    --{{6}, 1100, 1, 6870}  --- values for real world
 }
