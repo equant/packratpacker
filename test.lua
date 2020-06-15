@@ -5,6 +5,8 @@ for i, seq in pairs(led_sequences) do
     end
 end
 
+test_pin = 7
+
 function turn_all_off()
     for i, p in pairs(all_pins) do
         led_off(p)
@@ -12,7 +14,7 @@ function turn_all_off()
 end
 
 test_tmr = tmr.create()
-test_tmr:register(5000, tmr.ALARM_SEMI, turn_all_off)
+test_tmr:register(3000, tmr.ALARM_SEMI, turn_all_off)
 
 function do_test_sequence()
     running, mode = test_tmr:state()
@@ -21,7 +23,7 @@ function do_test_sequence()
         return
     end
 
-    -- Register timer to turn them off after 5 sec
+    -- Register timer to turn them off after x sec
     test_tmr:start()
 
     -- Turn them all on
@@ -30,5 +32,23 @@ function do_test_sequence()
     end
 end
 
-gpio.mode(7, gpio.INT, gpio.PULLUP)
-gpio.trig(7, "down", do_test_sequence)
+
+--gpio.mode(7, gpio.INT, gpio.PULLUP)
+--gpio.trig(7, "down", do_test_sequence)
+
+function onNegEdge ()
+    -- This tmr delays the checking for GPIO state for some time
+    -- It's crucial to do this to avoid GPIO picking up noises especially from switching of inductive loads
+    tmr.alarm(0, 50, 1,
+        function()
+            if (gpio.read(test_pin) == 0) then
+                -- put your actions here
+                print('The test button was pressed')
+                do_test_sequence()
+        end
+    end)
+
+end
+
+gpio.mode(test_pin, gpio.INT, gpio.PULLUP) -- see https://github.com/hackhitchin/esp8266-co-uk/pull/1
+gpio.trig(test_pin, 'down', debounce(onNegEdge))

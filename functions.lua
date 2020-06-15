@@ -92,3 +92,30 @@ function do_blink(seq)
     end
     return c
 end
+
+function debounce (func)
+
+    local last = 0
+    local delay = 50000 -- 50ms * 1000 as tmr.now() has μs resolution
+
+
+
+    return function (...)
+
+        local now = tmr.now()
+        local delta = now - last
+
+        if delta < 0 then delta = delta + 2147483647 end; -- proposed because of delta rolling over, https://github.com/hackhitchin/esp8266-co-uk/issues/2
+
+        -- If this check is true then the interrupt will get ignored
+        if (delta < delay and last ~= 0) then return end;
+
+
+        last = now
+        if last == 0 then last = 1 end;
+        return func(...)
+
+    end
+
+end
+
