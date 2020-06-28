@@ -1,0 +1,83 @@
+--dofile("functions.lua")
+
+sda = 2 -- SDA Pin
+scl = 1 -- SCL Pin
+
+s=0
+m=0
+h=0
+
+sla = 0x3C
+--sla = 0x3D
+--sla = 0x78
+--sla = 0x7A
+print("i2c.setup()...")
+i2c.setup(0, sda, scl, i2c.SLOW)
+print("u8g2 setup()...")
+disp = u8g2.ssd1306_i2c_128x32_univision(0, sla)
+--disp:setFont(u8g2.font_6x10)
+--disp:setFontRefHeightExtendedText()
+--disp:setDefaultForegroundColor()
+--disp:setFontPosTop()
+--disp:setRot180()           -- Rotate Display if needed
+
+disp:clearBuffer() -- start with clean buffer
+disp:setFont(u8g2.font_6x10_tf) -- set 6x10 font
+disp:setContrast(125)
+disp:drawStr(10, 10, "Please wait")
+disp:sendBuffer() -- sent buffer to display
+
+disp:setFont(u8g2.font_6x10_tf) -- set 6x10 font
+disp:clearBuffer() -- start with clean buffer
+disp:setContrast(125)
+disp:drawStr(0, 12, "Good Morning Augusta")
+disp:drawStr(0, 22, "Do you want iced")
+disp:drawStr(0, 32, "cream for breakfast?")
+disp:sendBuffer() -- sent buffer to display
+
+disp:setFont(u8g2.font_unifont_t_symbols) -- set 6x10 font
+disp:clearBuffer() -- start with clean buffer
+--disp:drawUTF8(5, 20, "☃")
+disp:drawUTF8(5, 20, "☔")
+disp:sendBuffer() -- sent buffer to display
+
+disp:setBitmapMode(0) -- solid
+cross_width = 24
+cross_height = 24
+cross_bits = string.char(
+  0x00, 0x18, 0x00, 0x00, 0x24, 0x00, 0x00, 0x24, 0x00, 0x00, 0x42, 0x00,
+  0x00, 0x42, 0x00, 0x00, 0x42, 0x00, 0x00, 0x81, 0x00, 0x00, 0x81, 0x00,
+  0xC0, 0x00, 0x03, 0x38, 0x3C, 0x1C, 0x06, 0x42, 0x60, 0x01, 0x42, 0x80,
+  0x01, 0x42, 0x80, 0x06, 0x42, 0x60, 0x38, 0x3C, 0x1C, 0xC0, 0x00, 0x03,
+  0x00, 0x81, 0x00, 0x00, 0x81, 0x00, 0x00, 0x42, 0x00, 0x00, 0x42, 0x00,
+  0x00, 0x42, 0x00, 0x00, 0x24, 0x00, 0x00, 0x24, 0x00, 0x00, 0x18, 0x00)
+disp:drawXBM(2, 12, cross_width, cross_height, cross_bits)
+--disp:drawXBM(2, 12, cross_width, cross_height, 0x80)
+disp:sendBuffer() -- sent buffer to display
+
+--print("Drawing string...")
+----disp:drawStr(40, 20,  string.format("%02d:%02d:%02d",h,m,s))
+--print("Sending buffer...")
+--
+--disp:drawStr(1, 1, "Moisture")
+----disp:drawStr(1, 9, "Sensor V 1.0")
+----disp:drawStr(2, 17, "by SOTM")
+--disp:sendBuffer()
+--
+----tmr.alarm(0, 1000, 1, function() -- Every second increment clock and display
+----tmr.create():alarm(1000, tmr.ALARM_AUTO, function() -- Every second increment clock and display
+--    --s = s+1
+--    --if s==60 then
+--     --s=0
+--     --m=m + 1
+--    --end
+--    --if m==60 then
+--     --m=0
+--     --h=h + 1
+--    --end
+--    --if h==13 then
+--     --h=1
+--    --end
+--    --write_OLED()
+----end)
+--print("End of main.lua")
